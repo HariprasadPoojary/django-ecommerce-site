@@ -3,6 +3,70 @@
 {% load static %}
 {% block content %}
 
-<h2>Cart</h2>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="box-element">
+			<a href="{% url 'store' %}" class="btn btn-outline-dark">
+				<span class="spcl-ch">↞</span> Continue Shopping</a
+			>
+			<br />
+			<br />
+			<table class="table">
+				<tr>
+					<th>
+						<h5>Items: <strong>3</strong></h5>
+					</th>
+					<th>
+						<h5>Total: <strong>₹200</strong></h5>
+					</th>
+					<th>
+						<a
+							href="{% url 'checkout' %}"
+							class="btn btn-success set-right"
+							>Checkout</a
+						>
+					</th>
+				</tr>
+			</table>
+		</div>
+		<br />
+		<div class="box-element">
+			<div class="cart-row">
+				<div style="flex: 2"><strong></strong></div>
+				<div style="flex: 2"><strong>Item</strong></div>
+				<div style="flex: 1"><strong>Price</strong></div>
+				<div style="flex: 1"><strong>Quantity</strong></div>
+				<div style="flex: 1"><strong>Total</strong></div>
+			</div>
+			<div class="cart-row">
+				<div style="flex: 2">
+					<img
+						src="{% static 'images/placeholder.png' %}"
+						class="row-image"
+						alt="cart-product-image"
+					/>
+				</div>
+				<div style="flex: 2">Product 1</div>
+				<div style="flex: 1">₹100</div>
+				<div style="flex: 1" class="qnty">
+					<p class="quantity">2</p>
+					<div class="quantity">
+						<img
+							src="{% static 'images/up-chevron.png' %}"
+							alt="🔼"
+							class="chg-quantity"
+						/>
+						<img
+							src="{% static 'images/down-chevron.png' %}"
+							alt="🔽"
+							class="chg-quantity"
+						/>
+					</div>
+				</div>
+				<div style="flex: 1">₹200</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock content %}

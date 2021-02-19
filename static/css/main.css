@@ -35,9 +35,9 @@ h6 {
 }
 
 #cart-icon {
-	width: 25px;
+	width: 30px;
 	display: inline-block;
-	margin-left: 15px;
+	margin: 0 3px 0 15px;
 }
 
 #cart-total {
@@ -87,7 +87,7 @@ h6 {
 }
 
 .chg-quantity {
-	width: 12px;
+	width: 10px;
 	cursor: pointer;
 	display: block;
 	margin-top: 5px;
@@ -100,4 +100,28 @@ h6 {
 
 .hidden {
 	display: none !important;
+}
+
+/* My edits */
+.spcl-ch {
+	font-size: 20px;
+}
+.set-right {
+	float: right;
+	margin: 5px;
+}
+
+.qnty {
+	display: flex;
+}
+.qnty p {
+	padding-top: 5px;
+}
+
+#flaticon {
+	font-size: 6px;
+	padding: 20px;
+}
+#flaticon a {
+	text-decoration: none;
 }
