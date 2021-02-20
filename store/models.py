@@ -8,10 +8,19 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField(null=False)
     digital = models.BooleanField(null=False)
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.name
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ""
+
+        return url
 
 
 class Customer(models.Model):
