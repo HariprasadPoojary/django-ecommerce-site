@@ -6,11 +6,19 @@
 <div class="row">
 	{% for product in products %}
 	<div class="col-lg-4">
+		{% if product.imageURL%}
 		<img
 			class="thumbnail"
 			src="{{product.imageURL}}"
 			alt="product-thumbnail"
 		/>
+		{% else %}
+		<img
+			class="thumbnail"
+			src="{% static 'images/placeholder.png' %}"
+			alt="product-thumbnail"
+		/>
+		{% endif %}
 		<div class="box-element product">
 			<h6><strong>{{product.name}}</strong></h6>
 			<hr />
