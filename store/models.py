@@ -8,7 +8,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField(null=False)
     digital = models.BooleanField(null=False)
-    # image =
+    image = models.ImageField(null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -49,7 +49,7 @@ class ShippingAddress(models.Model):
     address = models.CharField(max_length=300, null=False)
     city = models.CharField(max_length=100, null=False)
     state = models.CharField(max_length=100, null=False)
-    pincode = models.IntegerField(max_length=999999, null=False)
+    pincode = models.IntegerField(null=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
