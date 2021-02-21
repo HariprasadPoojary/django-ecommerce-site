@@ -11,7 +11,16 @@ def store_page(request):
 
 
 def cart_page(request):
-    return render(request, "store/cart.html")
+    # Get Customer Info from logged in User
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, completed=False)
+        items = order.orderitem_set.all()
+    else:  # If Users is not logged in
+        items = []
+
+    context = {"items": items, "order":order}
+    return render(request, "store/cart.html", context)
 
 
 def checkout_page(request):
