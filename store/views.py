@@ -17,9 +17,18 @@ def cart_page(request):
         order, created = Order.objects.get_or_create(customer=customer, completed=False)
         items = order.orderitem_set.all()
     else:  # If Users is not logged in
+        # Empty items
         items = []
+        # Empty order dict
+        order = {
+            "get_total_cart_price": 0,
+            "get_total_cart_items": 0,
+        }
 
-    context = {"items": items, "order":order}
+    context = {
+        "items": items,
+        "order": order,
+    }
     return render(request, "store/cart.html", context)
 
 
