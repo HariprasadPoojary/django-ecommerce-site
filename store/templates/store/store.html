@@ -2,7 +2,6 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-
 <div class="row">
 	{% for product in products %}
 	<div class="col-lg-4">
@@ -22,7 +21,11 @@
 		<div class="box-element product">
 			<h6><strong>{{product.name}}</strong></h6>
 			<hr />
-			<button class="btn btn-outline-secondary add-btn">
+			<button
+				class="btn btn-outline-secondary add-cart"
+				data-product="{{product.id}}"
+				data-action="add"
+			>
 				Add to Cart
 			</button>
 			<a href="#" class="btn btn-outline-success">View</a>
