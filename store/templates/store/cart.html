@@ -49,16 +49,24 @@
 			{% for item in items %}
 			<div class="cart-row">
 				<div style="flex: 2">
+					{% if item.product.imageURL %}
 					<img
 						src="{{item.product.imageURL}}"
 						class="row-image"
 						alt="cart-product-image"
 					/>
+					{% else %}
+					<img
+						src="{% static 'images/placeholder.png' %}"
+						class="row-image"
+						alt="cart-product-image"
+					/>
+					{% endif %}
 				</div>
 				<div style="flex: 2">{{item.product.name}}</div>
 				<div style="flex: 1">₹{{item.product.price|floatformat:2}}</div>
 				<div style="flex: 1" class="qnty">
-					<p class="quantity">{{item.quantity}}</p>
+					<p class="quantity">x{{item.quantity}}</p>
 					<div class="quantity">
 						<img
 							src="{% static 'images/up-chevron.png' %}"
