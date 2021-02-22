@@ -1,6 +1,36 @@
 "use strict";
 console.log("Hare Krishna!");
 
+//? Send AJAX request with fetch
+const sendAJAX = async function (method, url, csrf, data) {
+	try {
+		const res = await fetch(url, {
+			method: method,
+			body: JSON.stringify(data),
+			headers:
+				method !== "GET"
+					? {
+							"Content-Type": "application/json",
+							"X-CSRFToken": csrf,
+					  }
+					: {},
+		});
+		if (res.status >= 400) {
+			// Convert response to JavaScript object
+			const errResponse = await res.json();
+			const err = new Error("Something went wrong!!");
+			err.data = errResponse;
+			throw err;
+		}
+		let dataResponse;
+		if (method !== "DELETE") dataResponse = await res.json();
+		return dataResponse;
+	} catch (error) {
+		throw error;
+	}
+};
+
+// Get list of all products
 let products = document.querySelectorAll(".add-cart");
 
 async function updateCartOrder(productId, productAction) {
@@ -11,24 +41,14 @@ async function updateCartOrder(productId, productAction) {
 		productid: productId,
 		action: productAction,
 	};
-	try {
-		const res = await fetch(url, {
-			method: "POST",
-			body: JSON.stringify(data),
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrftoken,
-			},
-		});
-		let response = await res.json();
-		return response;
-	} catch (error) {
-		throw error;
-	}
+	const token = csrftoken; // token from main.html
+	const response = await sendAJAX("POST", url, token, data);
+	console.log(response);
+	return response;
 }
 
 for (let item of products) {
-	item.addEventListener("click", async function () {
+	item.addEventListener("click", function () {
 		let productId = this.dataset.product;
 		let productAction = this.dataset.action;
 		console.log(`Product ID: ${productId}, Action: ${productAction}`);
@@ -37,9 +57,8 @@ for (let item of products) {
 		if (user === "AnonymousUser") {
 			console.log("User is not authenticated");
 		} else {
-			let response = await updateCartOrder(productId, productAction);
+			updateCartOrder(productId, productAction);
 			location.reload();
-			console.log(response);
 		}
 	});
 }
