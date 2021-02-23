@@ -30,6 +30,7 @@ const sendAJAX = async function (method, url, csrf, data) {
 	}
 };
 
+// ? Add to cart from Store Page
 // Get list of all products
 let products = document.querySelectorAll(".add-cart");
 
@@ -62,3 +63,6 @@ for (let item of products) {
 		}
 	});
 }
+
+// ? Add quantity or Reduce/Remove item from Cart Page
+

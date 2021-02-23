@@ -69,14 +69,18 @@
 					<p class="quantity">x{{item.quantity}}</p>
 					<div class="quantity">
 						<img
+							data-product="{{item.product.id}}"
+							data-action="add"
 							src="{% static 'images/up-chevron.png' %}"
 							alt="🔼"
-							class="chg-quantity"
+							class="chg-quantity add-cart"
 						/>
 						<img
+							data-product="{{item.product.id}}"
+							data-action="remove"
 							src="{% static 'images/down-chevron.png' %}"
 							alt="🔽"
-							class="chg-quantity"
+							class="chg-quantity add-cart"
 						/>
 					</div>
 				</div>

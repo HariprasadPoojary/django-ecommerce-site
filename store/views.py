@@ -69,6 +69,7 @@ def checkout_page(request):
         order = {
             "get_total_cart_price": 0,
             "get_total_cart_items": 0,
+            "need_shipping": False,
         }
         cart_items = order["get_total_cart_items"]
 

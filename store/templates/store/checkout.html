@@ -122,4 +122,12 @@
 	</div>
 </div>
 
+<script>
+	let need_shipping = "{{order.need_shipping}}";
+
+	if (need_shipping === "False") {
+		document.querySelector("#shipping-info").innerHTML = "";
+	}
+</script>
+
 {% endblock content %}
