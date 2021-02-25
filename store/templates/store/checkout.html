@@ -80,7 +80,10 @@
 		<br />
 		<!-- Payment Options -->
 		<div class="box-element hidden" id="payment-info">
-			<small>Paypal Options</small>
+			<p>Paypal Options:</p>
+			<button id="make-payment" class="btn btn-success btn-block">
+				Make Payment
+			</button>
 		</div>
 	</div>
 
@@ -123,11 +126,32 @@
 </div>
 
 <script>
+	//? Check if shpping info is required
 	let need_shipping = "{{order.need_shipping}}";
 
 	if (need_shipping === "False") {
 		document.querySelector("#shipping-info").innerHTML = "";
 	}
+
+	//? Add Event listener to the form
+	const formTag = document.querySelector("#form");
+	const submitBtnTag = document.querySelector("#form-button");
+	const paymentTag = document.querySelector("#payment-info");
+
+	function submitFormData() {
+		console.log("Form Data processed");
+	}
+
+	formTag.addEventListener("submit", function (e) {
+		e.preventDefault();
+
+		submitFormData();
+		console.log("Form submitted");
+		// hide submit button
+		submitBtnTag.classList.add("hidden");
+		// reveal payment option
+		paymentTag.classList.remove("hidden");
+	});
 </script>
 
 {% endblock content %}
