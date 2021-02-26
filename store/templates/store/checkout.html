@@ -10,8 +10,8 @@
 				<!-- User Info -->
 				<div id="user-info">
 					<p>User Information:</p>
-
 					<div class="form-field">
+						{% if "AnonymousUser" == request.user %}
 						<input
 							required
 							class="form-control"
@@ -19,8 +19,17 @@
 							name="name"
 							placeholder="Name.."
 						/>
+						{% else %}
+						<input
+							class="form-control"
+							type="text"
+							placeholder="{{customer.name}}"
+							readonly
+						/>
+						{% endif %}
 					</div>
 					<div class="form-field">
+						{% if request.user == "AnonymousUser" %}
 						<input
 							required
 							class="form-control"
@@ -28,13 +37,21 @@
 							name="email"
 							placeholder="Email.."
 						/>
+						{% else %}
+						<input
+							class="form-control"
+							type="text"
+							placeholder="{{customer.email}}"
+							readonly
+						/>
+						{% endif %}
 					</div>
 				</div>
 				<hr />
 				<!-- User Address -->
+				{% if order.need_shipping %}
 				<div id="shipping-info">
 					<p>Shipping Information:</p>
-
 					<div class="form-field">
 						<input
 							class="form-control"
@@ -68,7 +85,9 @@
 						/>
 					</div>
 				</div>
-
+				{% else %}
+				<div></div>
+				{% endif %}
 				<input
 					id="form-button"
 					class="btn btn-success btn-block"
@@ -126,31 +145,28 @@
 </div>
 
 <script>
-	//? Check if shpping info is required
-	let need_shipping = "{{order.need_shipping}}";
-
-	if (need_shipping === "False") {
-		document.querySelector("#shipping-info").innerHTML = "";
-	}
-
 	//? Add Event listener to the form
 	const formTag = document.querySelector("#form");
 	const submitBtnTag = document.querySelector("#form-button");
 	const paymentTag = document.querySelector("#payment-info");
+	const paymentBtnTag = document.querySelector("#make-payment");
 
 	function submitFormData() {
-		console.log("Form Data processed");
+		console.log("Payment Btn clicked");
 	}
 
 	formTag.addEventListener("submit", function (e) {
 		e.preventDefault();
 
-		submitFormData();
 		console.log("Form submitted");
 		// hide submit button
 		submitBtnTag.classList.add("hidden");
 		// reveal payment option
 		paymentTag.classList.remove("hidden");
+	});
+
+	paymentBtnTag.addEventListener("click", function () {
+		submitFormData();
 	});
 </script>
 

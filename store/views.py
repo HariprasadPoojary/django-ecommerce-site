@@ -72,11 +72,13 @@ def checkout_page(request):
             "need_shipping": False,
         }
         cart_items = order["get_total_cart_items"]
+        customer = []
 
     context = {
         "items": items,
         "order": order,
         "cart_items": cart_items,
+        "customer": customer,
     }
     return render(request, "store/checkout.html", context)
 
@@ -107,7 +109,7 @@ def update_item(request):
         orderItem.quantity -= 1
 
     if orderItem.quantity <= 0:
-        orderItem.delete() #Delete item
+        orderItem.delete()  # Delete item
         return JsonResponse("Item was deleted..", safe=False)
 
     orderItem.save()
