@@ -58,6 +58,7 @@ def cart_page(request):
 def checkout_page(request):
     # Get Customer Info from logged in User
     if request.user.is_authenticated:
+        logged_in = True
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, completed=False)
         items = order.orderitem_set.all()
@@ -73,12 +74,14 @@ def checkout_page(request):
         }
         cart_items = order["get_total_cart_items"]
         customer = []
+        logged_in = False
 
     context = {
         "items": items,
         "order": order,
         "cart_items": cart_items,
         "customer": customer,
+        "logged_in": logged_in,
     }
     return render(request, "store/checkout.html", context)
 

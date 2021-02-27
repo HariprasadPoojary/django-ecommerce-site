@@ -11,7 +11,14 @@
 				<div id="user-info">
 					<p>User Information:</p>
 					<div class="form-field">
-						{% if "AnonymousUser" == request.user %}
+						{% if logged_in %}
+						<input
+							class="form-control"
+							type="text"
+							placeholder="{{customer.name}}"
+							readonly
+						/>
+						{% else %}
 						<input
 							required
 							class="form-control"
@@ -19,30 +26,23 @@
 							name="name"
 							placeholder="Name.."
 						/>
-						{% else %}
-						<input
-							class="form-control"
-							type="text"
-							placeholder="{{customer.name}}"
-							readonly
-						/>
 						{% endif %}
 					</div>
 					<div class="form-field">
-						{% if request.user == "AnonymousUser" %}
+						{% if logged_in %}
+						<input
+							class="form-control"
+							type="text"
+							placeholder="{{customer.email}}"
+							readonly
+						/>
+						{% else %}
 						<input
 							required
 							class="form-control"
 							type="email"
 							name="email"
 							placeholder="Email.."
-						/>
-						{% else %}
-						<input
-							class="form-control"
-							type="text"
-							placeholder="{{customer.email}}"
-							readonly
 						/>
 						{% endif %}
 					</div>
