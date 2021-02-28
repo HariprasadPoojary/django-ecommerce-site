@@ -15,6 +15,7 @@
 						<input
 							class="form-control"
 							type="text"
+							name="name"
 							placeholder="{{customer.name}}"
 							readonly
 						/>
@@ -32,7 +33,8 @@
 						{% if logged_in %}
 						<input
 							class="form-control"
-							type="text"
+							type="email"
+							name="email"
 							placeholder="{{customer.email}}"
 							readonly
 						/>
@@ -80,7 +82,7 @@
 						<input
 							class="form-control"
 							type="text"
-							name="zipcode"
+							name="pincode"
 							placeholder="Zip code.."
 						/>
 					</div>
@@ -143,31 +145,9 @@
 		</div>
 	</div>
 </div>
-
 <script>
-	//? Add Event listener to the form
-	const formTag = document.querySelector("#form");
-	const submitBtnTag = document.querySelector("#form-button");
-	const paymentTag = document.querySelector("#payment-info");
-	const paymentBtnTag = document.querySelector("#make-payment");
-
-	function submitFormData() {
-		console.log("Payment Btn clicked");
-	}
-
-	formTag.addEventListener("submit", function (e) {
-		e.preventDefault();
-
-		console.log("Form submitted");
-		// hide submit button
-		submitBtnTag.classList.add("hidden");
-		// reveal payment option
-		paymentTag.classList.remove("hidden");
-	});
-
-	paymentBtnTag.addEventListener("click", function () {
-		submitFormData();
-	});
+	// Django variables
+	const shipping = "{{order.need_shipping}}";
+	const cart_total = "{{order.get_total_cart_price|floatformat:2}}";
 </script>
-
 {% endblock content %}

@@ -42,9 +42,7 @@ async function updateCartOrder(productId, productAction) {
 		productid: productId,
 		action: productAction,
 	};
-	const token = csrftoken; // token from main.html
-	const response = await sendAJAX("POST", url, token, data);
-	console.log(response);
+	const response = await sendAJAX("POST", url, csrftoken, data); //*  csrftoken from main.html
 	return response;
 }
 
@@ -58,8 +56,79 @@ for (let item of products) {
 		if (user === "AnonymousUser") {
 			console.log("User is not authenticated");
 		} else {
-			updateCartOrder(productId, productAction);
+			updateCartOrder(productId, productAction).then((res) => {
+				console.log(res);
+			});
 			location.reload();
 		}
 	});
 }
+
+//? Checkout Page Operations
+
+// Django variables
+//-- check in checkout.html
+
+// Add Event listener to the form
+const formTag = document.querySelector("#form");
+const submitBtnTag = document.querySelector("#form-button");
+const paymentTag = document.querySelector("#payment-info");
+const paymentBtnTag = document.querySelector("#make-payment");
+
+async function submitFormData() {
+	console.log("Payment Btn clicked");
+	// User data object
+	let userFormData = {
+		name: null,
+		email: null,
+		total: cart_total,
+	};
+	let shippingData = {
+		address: null,
+		city: null,
+		state: null,
+		pincode: null,
+	};
+	// Fill values
+	if (shipping != "False") {
+		shippingData.address = formTag.address.value;
+		shippingData.city = formTag.city.value;
+		shippingData.state = formTag.state.value;
+		shippingData.pincode = formTag.pincode.value;
+	}
+	if (user == "AnonymousUser") {
+		userFormData.name = formTag.name.value;
+		userFormData.email = formTag.email.value;
+	}
+
+	// Send Data
+	let data = {
+		form: userFormData,
+		shipping: shippingData,
+	};
+	const formResponse = await sendAJAX(
+		"POST",
+		"/process_order/",
+		csrftoken,
+		data
+	); //*  csrftoken from main.html
+	return formResponse;
+}
+
+formTag.addEventListener("submit", function (e) {
+	e.preventDefault();
+
+	console.log("Form submitted");
+	// hide submit button
+	submitBtnTag.classList.add("hidden");
+	// reveal payment option
+	paymentTag.classList.remove("hidden");
+});
+
+paymentBtnTag.addEventListener("click", function () {
+	submitFormData().then((res) => {
+		console.log(res);
+	});
+	alert("Transaction Completed!");
+	window.location.href = "/";
+});
