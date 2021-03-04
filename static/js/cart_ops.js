@@ -46,6 +46,31 @@ async function updateCartOrder(productId, productAction) {
 	return response;
 }
 
+function addCookieItem(productId, productAction) {
+	console.log("User not authenticated");
+	if (productAction === "add") {
+		if (cart[productId] == undefined) {
+			cart[productId] = { quantity: 1 };
+		} else {
+			cart[productId]["quantity"] += 1;
+		}
+	}
+
+	if (productAction === "remove") {
+		cart[productId]["quantity"] -= 1;
+
+		if (cart[productId]["quantity"] <= 0) {
+			console.log("Item must be deleted");
+			delete cart[productId];
+		}
+	}
+
+	//* set cookie
+	setCookie(cart);
+
+	console.log("Cart:", cart);
+}
+
 for (let item of products) {
 	item.addEventListener("click", function () {
 		let productId = this.dataset.product;
@@ -54,7 +79,7 @@ for (let item of products) {
 
 		// Check if User is authenticated
 		if (user === "AnonymousUser") {
-			console.log("User is not authenticated");
+			addCookieItem(productId, productAction);
 		} else {
 			updateCartOrder(productId, productAction).then((res) => {
 				console.log(res);
