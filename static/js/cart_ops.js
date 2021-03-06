@@ -67,6 +67,7 @@ function addCookieItem(productId, productAction) {
 
 	//* set cookie
 	setCookie(cart);
+	location.reload();
 
 	console.log("Cart:", cart);
 }

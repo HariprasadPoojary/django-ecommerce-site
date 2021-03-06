@@ -13,14 +13,17 @@ def store_page(request):
         # items = order.orderitem_set.all()
         cart_items = order.get_total_cart_items
     else:  # If Users is not logged in
-        # # Empty items
-        items = []
-        # # Empty order dict
-        order = {
-            "get_total_cart_price": 0,
-            "get_total_cart_items": 0,
-        }
-        cart_items = order["get_total_cart_items"]
+        # Get total number of items from browser cookies & convert to python object
+        try:
+            cart = json.loads(request.COOKIES["cart"])
+        except:
+            cart = {}
+        print(f"Cart from Cookie: {cart}")
+        cart_items = 0
+        # Calculate total item quantity
+        for item in cart:
+            cart_items += cart[item]["quantity"]
+
     # Get all products
     products = Product.objects.all()
 
@@ -39,6 +42,11 @@ def cart_page(request):
         items = order.orderitem_set.all()
         cart_items = order.get_total_cart_items
     else:  # If Users is not logged in
+        # Get total number of items from browser cookies & convert to python object
+        try:
+            cart = json.loads(request.COOKIES["cart"])
+        except:
+            cart = {}
         # Empty items
         items = []
         # Empty order dict
@@ -47,6 +55,9 @@ def cart_page(request):
             "get_total_cart_items": 0,
         }
         cart_items = order["get_total_cart_items"]
+        # Calculate total item quantity
+        for item in cart:
+            cart_items += cart[item]["quantity"]
 
     context = {
         "items": items,
