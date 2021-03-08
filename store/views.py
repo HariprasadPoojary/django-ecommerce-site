@@ -3,6 +3,7 @@ from .models import *
 from django.http import JsonResponse
 import json
 import datetime
+from .utils import cookie_cart
 
 # Create your views here.
 def store_page(request):
@@ -13,16 +14,8 @@ def store_page(request):
         # items = order.orderitem_set.all()
         cart_items = order.get_total_cart_items
     else:  # If Users is not logged in
-        # Get total number of items from browser cookies & convert to python object
-        try:
-            cart = json.loads(request.COOKIES["cart"])
-        except:
-            cart = {}
-        print(f"Cart from Cookie: {cart}")
-        cart_items = 0
-        # Calculate total item quantity
-        for item in cart:
-            cart_items += cart[item]["quantity"]
+        cookie_info = cookie_cart(request)  # from utils
+        cart_items = cookie_info["cart_items"]
 
     # Get all products
     products = Product.objects.all()
@@ -42,46 +35,10 @@ def cart_page(request):
         items = order.orderitem_set.all()
         cart_items = order.get_total_cart_items
     else:  # If Users is not logged in
-        # Get total number of items from browser cookies & convert to python object
-        try:
-            cart = json.loads(request.COOKIES["cart"])
-        except:
-            cart = {}
-        # Empty items
-        items = []
-        # Empty order dict
-        order = {
-            "get_total_cart_price": 0,
-            "get_total_cart_items": 0,
-        }
-        cart_items = order["get_total_cart_items"]
-
-        for item in cart:
-            try:
-                item_quantity = cart[item]["quantity"]
-                # Calculate total item quantity
-                cart_items += item_quantity
-                # Get product
-                product = Product.objects.get(id=item)  # key is the Product id
-                # Calculate total price of product i.e. prod * quantity
-                total = product.price * item_quantity
-                # update order dict
-                order["get_total_cart_price"] += total
-                order["get_total_cart_items"] += item_quantity
-                # create item dict and append to items list
-                item_dict = {
-                    "product": {
-                        "id": product.id,
-                        "name": product.name,
-                        "price": product.price,
-                        "imageURL": product.imageURL,
-                    },
-                    "quantity": item_quantity,
-                    "get_total": total,
-                }
-                items.append(item_dict)
-            except:
-                pass
+        cookie_info = cookie_cart(request)  # from utils
+        cart_items = cookie_info["cart_items"]
+        items = cookie_info["items"]
+        order = cookie_info["order"]
 
     context = {
         "items": items,
@@ -100,53 +57,12 @@ def checkout_page(request):
         items = order.orderitem_set.all()
         cart_items = order.get_total_cart_items
     else:  # If Users is not logged in
-        # Get total number of items from browser cookies & convert to python object
-        try:
-            cart = json.loads(request.COOKIES["cart"])
-        except:
-            cart = {}
-        # Empty items
-        items = []
-        # Empty order dict
-        order = {
-            "get_total_cart_price": 0,
-            "get_total_cart_items": 0,
-            "need_shipping": False,
-        }
-        cart_items = order["get_total_cart_items"]
-        customer = []
-        logged_in = False
-
-        for item in cart:
-            try:
-                item_quantity = cart[item]["quantity"]
-                # Calculate total item quantity
-                cart_items += item_quantity
-                # Get product
-                product = Product.objects.get(id=item)  # key is the Product id
-                # Calculate total price of product i.e. prod * quantity
-                total = product.price * item_quantity
-                # update order dict
-                order["get_total_cart_price"] += total
-                order["get_total_cart_items"] += item_quantity
-                # create item dict and append to items list
-                item_dict = {
-                    "product": {
-                        "id": product.id,
-                        "name": product.name,
-                        "price": product.price,
-                        "imageURL": product.imageURL,
-                    },
-                    "quantity": item_quantity,
-                    "get_total": total,
-                }
-                items.append(item_dict)
-
-                # Set shpping info
-                if product.digital == False:
-                    order["need_shipping"] = True
-            except:
-                pass
+        cookie_info = cookie_cart(request)  # from utils
+        cart_items = cookie_info["cart_items"]
+        items = cookie_info["items"]
+        order = cookie_info["order"]
+        customer = cookie_info["customer"]
+        logged_in = cookie_info["logged_in"]
 
     context = {
         "items": items,
