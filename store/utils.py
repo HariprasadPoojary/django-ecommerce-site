@@ -58,3 +58,28 @@ def cookie_cart(request):
         "customer": customer,
         "logged_in": logged_in,
     }
+
+
+def data_cart(request):
+    # Get Customer Info from logged in User
+    if request.user.is_authenticated:
+        logged_in = True
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, completed=False)
+        items = order.orderitem_set.all()
+        cart_items = order.get_total_cart_items
+    else:  # If Users is not logged in
+        cookie_info = cookie_cart(request)  # from utils
+        cart_items = cookie_info["cart_items"]
+        items = cookie_info["items"]
+        order = cookie_info["order"]
+        customer = cookie_info["customer"]
+        logged_in = cookie_info["logged_in"]
+
+    return {
+        "items": items,
+        "order": order,
+        "cart_items": cart_items,
+        "customer": customer,
+        "logged_in": logged_in,
+    }

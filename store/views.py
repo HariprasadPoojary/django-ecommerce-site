@@ -3,19 +3,13 @@ from .models import *
 from django.http import JsonResponse
 import json
 import datetime
-from .utils import cookie_cart
+from .utils import cookie_cart, data_cart
 
 # Create your views here.
 def store_page(request):
-    # Get Customer Info from logged in User
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, completed=False)
-        # items = order.orderitem_set.all()
-        cart_items = order.get_total_cart_items
-    else:  # If Users is not logged in
-        cookie_info = cookie_cart(request)  # from utils
-        cart_items = cookie_info["cart_items"]
+
+    data = data_cart(request)
+    cart_items = data["cart_items"]
 
     # Get all products
     products = Product.objects.all()
@@ -28,17 +22,11 @@ def store_page(request):
 
 
 def cart_page(request):
-    # Get Customer Info from logged in User
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, completed=False)
-        items = order.orderitem_set.all()
-        cart_items = order.get_total_cart_items
-    else:  # If Users is not logged in
-        cookie_info = cookie_cart(request)  # from utils
-        cart_items = cookie_info["cart_items"]
-        items = cookie_info["items"]
-        order = cookie_info["order"]
+
+    data = data_cart(request)
+    items = data["items"]
+    order = data["order"]
+    cart_items = data["cart_items"]
 
     context = {
         "items": items,
@@ -49,28 +37,8 @@ def cart_page(request):
 
 
 def checkout_page(request):
-    # Get Customer Info from logged in User
-    if request.user.is_authenticated:
-        logged_in = True
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, completed=False)
-        items = order.orderitem_set.all()
-        cart_items = order.get_total_cart_items
-    else:  # If Users is not logged in
-        cookie_info = cookie_cart(request)  # from utils
-        cart_items = cookie_info["cart_items"]
-        items = cookie_info["items"]
-        order = cookie_info["order"]
-        customer = cookie_info["customer"]
-        logged_in = cookie_info["logged_in"]
-
-    context = {
-        "items": items,
-        "order": order,
-        "cart_items": cart_items,
-        "customer": customer,
-        "logged_in": logged_in,
-    }
+    # Get dictionary returned from utils.py
+    context = data_cart(request)
     return render(request, "store/checkout.html", context)
 
 
