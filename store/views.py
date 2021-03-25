@@ -1,9 +1,10 @@
+from itertools import product
 from django.shortcuts import render
 from .models import *
 from django.http import JsonResponse
 import json
 import datetime
-from .utils import cookie_cart, data_cart
+from .utils import data_cart, guest_order
 
 # Create your views here.
 def store_page(request):
@@ -84,25 +85,27 @@ def process_order(request):
         order, order_created = Order.objects.get_or_create(
             customer=customer, completed=False
         )
-        total = float(data["form"]["total"])
-        # Set value of transaction id
-        order.transaction_id = transaction_id
-        # validate total form fronted with backend
-        if total == order.get_total_cart_price:
-            order.completed = True
-        # Save the order
-        order.save()
 
-        # Create shipping data
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            address=data["shipping"]["address"],
-            city=data["shipping"]["city"],
-            state=data["shipping"]["state"],
-            pincode=data["shipping"]["pincode"],
-        )
-    else:
-        print("User is not logged in...")
+    else:  # Anonymous User
+        customer, order = guest_order(request, data)
+
+    total = float(data["form"]["total"])
+    # Set value of transaction id
+    order.transaction_id = transaction_id
+    # validate total form fronted with backend
+    if total == order.get_total_cart_price:
+        order.completed = True
+    # Save the order
+    order.save()
+
+    # Create shipping data
+    ShippingAddress.objects.create(
+        customer=customer,
+        order=order,
+        address=data["shipping"]["address"],
+        city=data["shipping"]["city"],
+        state=data["shipping"]["state"],
+        pincode=data["shipping"]["pincode"],
+    )
 
     return JsonResponse("Payment Submitted!", safe=False)

@@ -156,5 +156,7 @@ paymentBtnTag.addEventListener("click", function () {
 		console.log(res);
 	});
 	alert("Transaction Completed!");
+	cart = {};
+	document.cookie = `cart=${JSON.stringify(cart)};domain=;path=/`;
 	window.location.href = "/";
 });

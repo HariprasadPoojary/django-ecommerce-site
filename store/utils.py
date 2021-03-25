@@ -83,3 +83,36 @@ def data_cart(request):
         "customer": customer,
         "logged_in": logged_in,
     }
+
+
+def guest_order(request, data):
+    print("User is not logged in...")
+    print(f"Cookies: {request.COOKIES}")
+    name = data["form"]["name"]
+    email = data["form"]["email"]
+    cookie_cart_info = cookie_cart(request)
+    items = cookie_cart_info["items"]
+    # check if a anonymous user exists with same email id
+    # we will store the email id and create a customer, in case the anonymous user shops again; we don't have to create a new customer for the same email id
+    customer, customer_created = Customer.objects.get_or_create(email=email)
+    # assign the name to the customer. We don't assign name above because what if customer decides to change his name but uses same email id?
+    customer.name = name
+    # save customer
+    customer.save()
+
+    # create order
+    order = Order.objects.create(
+        customer=customer,
+        completed=False,
+    )
+
+    for item in items:
+        product_id = item["product"]["id"]
+        product = Product.objects.get(id=product_id)
+        order_item = OrderItem.objects.create(
+            order=order,
+            product=product,
+            quantity=item["quantity"],
+        )
+
+    return customer, order
