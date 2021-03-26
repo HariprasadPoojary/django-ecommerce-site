@@ -1,6 +1,8 @@
 # Django e-Commerce Website
 
-Web application built with the goal of learning how to use Django Models more efficiently
+![Take a look](static/images/Demo.gif)
+
+Web application built with the goal of learning - how to built Django Models and Views more efficiently
 
 ## Technologies used:
 
@@ -13,5 +15,7 @@ Web application built with the goal of learning how to use Django Models more ef
 -   Adding items to cart from home page
 -   Editing quantity(Add or Remove) of items on cart page
 -   Uploading items
--   **Ordering of items with anonymous user (using browser cookies)**
--   Payment integration
+-   **Guest User Operations, including _checkout_**
+-   Payment integration (_not implemented yet_)
+
+> This project is part of Django tutorial series by [Dennis Ivy](https://www.youtube.com/channel/UCTZRcDjjkVajGL6wd76UnGg "Dennis Ivy's Youtube Channel")
